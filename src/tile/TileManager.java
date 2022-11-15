@@ -22,7 +22,7 @@ public class TileManager {
         this.gp = gp;
 
         tile = new Tile[50];
-        mapTileNum = new int[gp.maxWorldCol][gp.MaxWorldRow];
+        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
         loadMap("../res/maps/worldV2.txt");
@@ -105,7 +105,7 @@ public class TileManager {
             int col = 0;
             int row = 0;
 
-            while (col <  gp.maxWorldCol && row < gp.MaxWorldRow) {
+            while (col <  gp.maxWorldCol && row < gp.maxWorldRow) {
 
                 String line = br.readLine();
 
@@ -136,7 +136,7 @@ public class TileManager {
         int worldCol = 0;
         int worldRow = 0;
 
-        while (worldCol < gp.maxWorldCol && worldRow < gp.MaxWorldRow) {
+        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
 
             int tileNum = mapTileNum[worldCol][worldRow];
 
