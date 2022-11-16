@@ -2,13 +2,10 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
-import main.UtilityTool;
 
-import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 
 public class Player extends Entity{
 
@@ -42,6 +39,8 @@ public class Player extends Entity{
 
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
+        //worldX = gp.tileSize * 10;
+        //worldY = gp.tileSize * 13;
         speed = 4;
         direction = "down";
 
@@ -63,7 +62,8 @@ public class Player extends Entity{
 
     public void update() {
 
-        if (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
+        if (keyH.upPressed == true || keyH.downPressed == true ||
+                 keyH.leftPressed == true || keyH.rightPressed == true) {
 
             if (keyH.upPressed == true) {
                 direction = "up";
@@ -89,6 +89,10 @@ public class Player extends Entity{
             //CHECK NPC COLLISION
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
+
+            // CHECK MONSTER COLLISION
+            int monsterIndex =gp.cChecker.checkEntity(this, gp.monster);
+            contactMonster(monsterIndex);
 
             // CHECK EVENT
             gp.eHandler.checkEvent();
@@ -116,6 +120,15 @@ public class Player extends Entity{
                 spriteCounter = 0;
             }
         }
+
+        // This needs to be outside of key if statement!
+        if (invincible == true) {
+            invincibleCounter++;
+            if (invincibleCounter > 60) {
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     public void pickUpObject(int i) {
@@ -132,6 +145,17 @@ public class Player extends Entity{
             if(gp.keyH.enterPressed == true) {
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
+            }
+        }
+    }
+
+    public void contactMonster(int i) {
+
+        if (i != 999) {
+
+            if (invincible == false) {
+                life -= 1;
+                invincible = true;
             }
         }
     }
@@ -174,6 +198,19 @@ public class Player extends Entity{
                 }
                 break;
         }
+
+        if (invincible == true) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
+
         g2.drawImage(image, screenX, screenY, null);
+
+        // Reset alpha
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+
+        // DEBUGddddddddddddddddddd
+        //g2.setFont(new Font("Arial", Font.PLAIN, 26));
+        //g2.setColor(Color.WHITE);
+        //g2.drawString("invicible:" + invincibleCounter, 10, 400);
     }
 }
